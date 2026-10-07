@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: Route
+metadata:
+  name: route-generate-document
+  annotations:
+    haproxy.router.openshift.io/timeout: 900s
+    haproxy.router.openshift.io/disable_cookies: "true"
+    haproxy.router.openshift.io/balance: roundrobin
+    description: Route for Decision Central's http service.
+spec:
+#  host: enterprise-m2m-generate-document.apps.aro-dev.conecel.com #DESARROLLO
+  host: enterprise-m2m-generate-document.apps.ocp-c2p.conecel.com #PRODUCCION
+  port:
+    targetPort: servlet-http
+  to:
+    kind: Service
+    name: svc-generate-document

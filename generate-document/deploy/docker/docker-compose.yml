@@ -1,0 +1,28 @@
+version: '3'
+services:
+  svc-generate-document.improvements-process-waiver.svc:
+    container_name: svc-generate-document.improvements-process-waiver.svc
+    image: improvements-process-waiver/generate-document:v2.0.3
+#    image: claro-edx-incubadora/generate-document:v2.0.3
+#    image: claro-service-waiver/generate-document:v2.0.3
+    ports:
+      - "8400:8400"
+    volumes:
+      -  ./config:/config
+      - /dockerlogsvol/logs/generate-document:/log
+    environment:
+      - JAVA_OPTS= -Xms350m -Xmx350m
+      - IP_HOST=192.168.37.146
+    restart: always
+    networks:
+      - wfm
+    deploy:
+      resources:
+        limits:
+          cpus: '0.50'
+          memory: 400M
+        reservations:
+          cpus: '0.25'
+          memory: 256M  
+networks:
+  wfm:

@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<Configuration status="WARN" monitorInterval="30">
+	<Properties>
+		<Property name="logPath">/log</Property>
+		<Property name="logSize">50MB</Property>
+		<Property name="rollingFileName">RollingFile</Property>
+		<Property name="consoleAppenderName">ConsoleAppender</Property>
+		<Property name="serviceName">generate-document</Property>
+		<Property name="packageName">com.conecel.claro.bnas.m2m.generate_document</Property>
+		<Property name="LOG_PATTERN">
+			[%d{yyyy-MM-dd HH:mm:ss.SSS}][%p][%c:%L][%M] [${serviceName}]%notEmpty{[transactionId=%X{transactionId}]}%notEmpty{[%X{externalTransactionId=externalTransactionId}]}%notEmpty{[ipClient=%X{ipClient}]->}%notEmpty{ipServer=[%X{ipServer}]}%notEmpty{transactionTime=[%X{transactionTime}]} - %m%n
+		</Property>
+	</Properties>
+	<Appenders>
+		<Console name="${consoleAppenderName}" target="SYSTEM_OUT"
+			follow="true">
+			<PatternLayout pattern="${LOG_PATTERN}" />
+		</Console>
+		<!-- Rolling File Appender -->
+		<RollingFile name="${rollingFileName}"
+			fileName="${logPath}/${serviceName}-${env:HOSTNAME}.log"
+			filePattern="${logPath}/${serviceName}-${env:HOSTNAME}-%i.log"
+			ignoreExceptions="false">
+			<PatternLayout>
+				<Pattern>${LOG_PATTERN}</Pattern>
+			</PatternLayout>
+			<Policies>
+				<SizeBasedTriggeringPolicy
+					size="${logSize}" />
+			</Policies>
+			<DefaultRolloverStrategy max="3" />
+		</RollingFile>
+	</Appenders>
+
+	<Loggers>
+		<AsyncLogger name="${packageName}" level="debug"
+			includeLocation="true">
+			<AppenderRef ref="${rollingFileName}" />
+		</AsyncLogger>
+		<AsyncLogger name="${packageName}" level="error"
+			includeLocation="true">
+			<AppenderRef ref="${rollingFileName}" />
+		</AsyncLogger>
+		<AsyncLogger name="${packageName}" level="info"
+			includeLocation="true">
+			<AppenderRef ref="${rollingFileName}" />
+		</AsyncLogger>
+		<Root level="info">
+			<AppenderRef ref="${consoleAppenderName}" />
+		</Root>
+
+	</Loggers>
+</Configuration>
